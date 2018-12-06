@@ -8,7 +8,7 @@ import java.util.List;
 class StructureBuilder {
 
 	CharSequence text;
-	List<Group> groups;
+	List<GroupBuilder> groups;
 	Deque<GroupBuilder> builders;
 
 	StructureBuilder(CharSequence text) {
@@ -30,7 +30,8 @@ class StructureBuilder {
 			for (BracketPair p : DefaultBracketPairs.INSTANCE.pairs) {
 				if (p.endMatch(ch) && !builders.isEmpty() && builders.peek().enclosingPair.equals(p)) {
 					GroupBuilder groupBuilder = builders.pop();
-					groups.add(groupBuilder.setEndIndex(i));
+					groupBuilder.setEndIndex(i);
+					groups.add(groupBuilder);
 					break;
 				}
 				if (p.startMatch(ch)) {
@@ -41,30 +42,11 @@ class StructureBuilder {
 		}
 	}
 
-	public class Group {
-
-		private final int startIndex;
-		private final int endIndex;
-
-		private Group(int startIndex, int endIndex) {
-			super();
-			this.startIndex = startIndex;
-			this.endIndex = endIndex;
-		}
-
-		public CharSequence getInner() {
-			return text.subSequence(startIndex + 1, endIndex);
-		}
-
-		public CharSequence getOuter() {
-			return text.subSequence(startIndex, endIndex + 1);
-		}
-	}
-
 	class GroupBuilder {
 
 		private final BracketPair enclosingPair;
-		private final int startIndex;
+		final int startIndex;
+		private int endIndex;
 
 		public GroupBuilder(BracketPair enclosingPair, int startIndex) {
 			super();
@@ -72,8 +54,12 @@ class StructureBuilder {
 			this.startIndex = startIndex;
 		}
 
-		public Group setEndIndex(int endIndex) {
-			return new Group(startIndex, endIndex);
+		public void setEndIndex(int endIndex) {
+			this.endIndex = endIndex;
+		}
+
+		public int getEndIndex() {
+			return endIndex;
 		}
 	}
 }

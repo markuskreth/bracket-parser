@@ -31,4 +31,14 @@ class BracketParserTest {
 		assertNull(result.getGroup());
 	}
 
+	@Test
+	void testMultipleBrackets() {
+		BracketStructure result = parser.parse("a(inner1)b(inner2)");
+		assertEquals(2, result.groupCount());
+		assertEquals("(inner1)", result.getGroup().getOuter());
+		assertEquals("(inner1)", result.getGroup(0).getOuter());
+		assertEquals("(inner2)", result.getGroup(1).getOuter());
+
+	}
+
 }
