@@ -20,11 +20,15 @@ public class BracketStructure {
 	}
 
 	public int groupCount() {
-		return 0;
+		return groups.size();
 	}
 
-	public String getGroup() {
-		return null;
+	public Group getGroup() {
+		if (groups.isEmpty()) {
+			return null;
+		} else {
+			return groups.get(0);
+		}
 	}
 
 	static StructureBuilder builder(CharSequence text) {
