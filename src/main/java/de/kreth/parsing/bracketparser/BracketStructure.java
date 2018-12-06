@@ -6,6 +6,34 @@ import java.util.stream.Collectors;
 
 /**
  * Structure of CharSequence with Brackets.
+ * <p>
+ * Structures are ordered by position of the opening bracket.
+ * <p>
+ * Example:
+ * <p>
+ * Text: ab(c"de(f)g"[h])i
+ * <table border="1">
+ * <tr>
+ * <th>index</th>
+ * <th>outer content</th>
+ * </tr>
+ * <tr>
+ * <td>0</td>
+ * <td>(c"de(f)g"[h])</td>
+ * </tr>
+ * <tr>
+ * <td>1</td>
+ * <td>"de(f)g"</td>
+ * </tr>
+ * <tr>
+ * <td>2</td>
+ * <td>(f)</td>
+ * </tr>
+ * <tr>
+ * <td>3</td>
+ * <td>[h]</td>
+ * </tr>
+ * </table>
  * 
  * @author markus
  *
@@ -17,8 +45,10 @@ public class BracketStructure {
 
 	BracketStructure(StructureBuilder builder) {
 		this.text = builder.text;
-		this.groups = Collections.unmodifiableList(builder.groups.stream()
-				.map(gb -> new Group(gb.startIndex, gb.getEndIndex())).collect(Collectors.toList()));
+		List<Group> tmpGroups = builder.groups.stream().map(gb -> new Group(gb.startIndex, gb.getEndIndex()))
+				.collect(Collectors.toList());
+		tmpGroups.sort((a, b) -> Integer.compare(a.startIndex, b.startIndex));
+		this.groups = Collections.unmodifiableList(tmpGroups);
 	}
 
 	/**
@@ -136,6 +166,10 @@ public class BracketStructure {
 			return true;
 		}
 
+		@Override
+		public String toString() {
+			return getOuter().toString();
+		}
 	}
 
 }
