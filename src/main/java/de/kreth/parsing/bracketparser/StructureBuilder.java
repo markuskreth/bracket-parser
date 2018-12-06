@@ -28,13 +28,14 @@ class StructureBuilder {
 		for (int i = 0; i < builder.text.length(); i++) {
 			char ch = builder.text.charAt(i);
 			for (BracketPair p : DefaultBracketPairs.INSTANCE.pairs) {
+				if (p.endMatch(ch) && !builders.isEmpty() && builders.peek().enclosingPair.equals(p)) {
+					GroupBuilder groupBuilder = builders.pop();
+					groups.add(groupBuilder.setEndIndex(i));
+					break;
+				}
 				if (p.startMatch(ch)) {
 					builders.push(new GroupBuilder(p, i));
 					break;
-				}
-				if (p.endMatch(ch) && builders.peek().enclosingPair.equals(p)) {
-					GroupBuilder groupBuilder = builders.pop();
-					groups.add(groupBuilder.setEndIndex(i));
 				}
 			}
 		}
@@ -52,11 +53,11 @@ class StructureBuilder {
 		}
 
 		public CharSequence getInner() {
-			return text.subSequence(startIndex + 1, endIndex - 1);
+			return text.subSequence(startIndex + 1, endIndex);
 		}
 
 		public CharSequence getOuter() {
-			return text.subSequence(startIndex, endIndex);
+			return text.subSequence(startIndex, endIndex + 1);
 		}
 	}
 

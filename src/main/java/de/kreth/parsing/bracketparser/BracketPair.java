@@ -4,7 +4,7 @@ public class BracketPair {
 
 	private char opening;
 	private char closing;
-	
+
 	public BracketPair(char opening, char cloding) {
 		super();
 		this.opening = opening;
@@ -18,7 +18,11 @@ public class BracketPair {
 	public boolean endMatch(char ch) {
 		return ch == closing;
 	}
-	
+
+	public String enclose(CharSequence text) {
+		return new StringBuilder().append(opening).append(text).append(closing).toString();
+	}
+
 	@Override
 	public String toString() {
 		return "Bracket " + opening + "..." + closing;
@@ -48,5 +52,5 @@ public class BracketPair {
 			return false;
 		return true;
 	}
-	
+
 }
