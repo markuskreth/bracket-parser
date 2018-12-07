@@ -1,5 +1,7 @@
 package de.kreth.parsing.bracketparser;
 
+import de.kreth.parsing.bracketparser.inner.StructureBuilder;
+
 public class BracketParser {
 
 	public static void main(String[] args) {

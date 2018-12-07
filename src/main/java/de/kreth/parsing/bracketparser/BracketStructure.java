@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.kreth.parsing.bracketparser.inner.StructureBuilder;
+
 /**
  * Structure of CharSequence with Brackets.
  * <p>
@@ -43,9 +45,9 @@ public class BracketStructure {
 	private final CharSequence text;
 	private final List<Group> groups;
 
-	BracketStructure(StructureBuilder builder) {
+	public BracketStructure(StructureBuilder builder) {
 		this.text = builder.text;
-		List<Group> tmpGroups = builder.groups.stream().map(gb -> new Group(gb.startIndex, gb.getEndIndex()))
+		List<Group> tmpGroups = builder.groupStream().map(gb -> new Group(gb.startIndex, gb.getEndIndex()))
 				.collect(Collectors.toList());
 		tmpGroups.sort((a, b) -> Integer.compare(a.startIndex, b.startIndex));
 		this.groups = Collections.unmodifiableList(tmpGroups);
