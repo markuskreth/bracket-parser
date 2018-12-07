@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import de.kreth.parsing.bracketparser.BracketPair;
-import de.kreth.parsing.bracketparser.BracketStructure;
 
 public class StructureBuilder {
 
@@ -21,26 +20,22 @@ public class StructureBuilder {
 		builders = new ArrayDeque<>();
 	}
 
-	public BracketStructure build() {
+	public void parse() {
 		if (text != null) {
-			parse(this);
-		}
-		return new BracketStructure(this);
-	}
 
-	private void parse(StructureBuilder builder) {
-		for (int i = 0; i < builder.text.length(); i++) {
-			char ch = builder.text.charAt(i);
-			for (BracketPair p : DefaultBracketPairs.INSTANCE.pairs) {
-				if (p.endMatch(ch) && !builders.isEmpty() && builders.peek().enclosingPair.equals(p)) {
-					GroupBuilder groupBuilder = builders.pop();
-					groupBuilder.setEndIndex(i);
-					groups.add(groupBuilder);
-					break;
-				}
-				if (p.startMatch(ch)) {
-					builders.push(new GroupBuilder(p, i));
-					break;
+			for (int i = 0; i < text.length(); i++) {
+				char ch = text.charAt(i);
+				for (BracketPair p : DefaultBracketPairs.INSTANCE.pairs) {
+					if (p.endMatch(ch) && !builders.isEmpty() && builders.peek().enclosingPair.equals(p)) {
+						GroupBuilder groupBuilder = builders.pop();
+						groupBuilder.setEndIndex(i);
+						groups.add(groupBuilder);
+						break;
+					}
+					if (p.startMatch(ch)) {
+						builders.push(new GroupBuilder(p, i));
+						break;
+					}
 				}
 			}
 		}

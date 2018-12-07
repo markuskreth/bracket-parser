@@ -45,7 +45,13 @@ public class BracketStructure {
 	private final CharSequence text;
 	private final List<Group> groups;
 
-	public BracketStructure(StructureBuilder builder) {
+	public static BracketStructure parse(CharSequence text) {
+		StructureBuilder builder = BracketStructure.builder(text);
+		builder.parse();
+		return new BracketStructure(builder);
+	}
+
+	BracketStructure(StructureBuilder builder) {
 		this.text = builder.text;
 		List<Group> tmpGroups = builder.groupStream().map(gb -> new Group(gb.startIndex, gb.getEndIndex()))
 				.collect(Collectors.toList());

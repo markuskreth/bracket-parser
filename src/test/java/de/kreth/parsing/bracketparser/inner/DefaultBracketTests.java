@@ -5,25 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import de.kreth.parsing.bracketparser.BracketPair;
-import de.kreth.parsing.bracketparser.BracketParser;
 import de.kreth.parsing.bracketparser.BracketStructure;
 import de.kreth.parsing.bracketparser.BracketStructure.Group;
-import de.kreth.parsing.bracketparser.inner.DefaultBracketPairs;
 
 class DefaultBracketTests {
-
-	private BracketParser parser;
-
-	@BeforeEach
-	public void initParser() {
-		parser = new BracketParser();
-	}
 
 	static Stream<Arguments> bracketProvider() {
 		return Stream.of(DefaultBracketPairs.INSTANCE.pairs).map(br -> Arguments.of(br));
@@ -34,7 +24,7 @@ class DefaultBracketTests {
 	void testDefaultSimple(BracketPair pair) {
 		String inner = "inner";
 		String whole = pair.enclose(inner);
-		BracketStructure result = parser.parse("x" + whole + "y");
+		BracketStructure result = BracketStructure.parse("x" + whole + "y");
 		assertNotNull(result);
 
 		assertEquals(1, result.groupCount());
@@ -50,13 +40,13 @@ class DefaultBracketTests {
 
 		String inner = "inner";
 		String whole = pair.enclose(inner);
-		BracketStructure result = parser.parse("x" + whole);
+		BracketStructure result = BracketStructure.parse("x" + whole);
 
 		Group first = result.getGroup();
 		assertEquals(inner, first.getInner());
 		assertEquals(whole, first.getOuter());
 
-		result = parser.parse(whole + "y");
+		result = BracketStructure.parse(whole + "y");
 
 		first = result.getGroup();
 		assertEquals(inner, first.getInner());
